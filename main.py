@@ -1,8 +1,11 @@
 from ArkETFConf import ArkETFConf
+
 from mysql_comm.mysql_comm import *
+from redis_comm.redis_comm import *
 
 from Middleware import *
 from GetArkETF import *
+
 
 mysql_conf={}
 
@@ -40,5 +43,8 @@ def main():
     
     DownFiles(ark_etf_conf, dir)
 
+def test_redis():
+    redis_conn()
+
 if __name__ == '__main__':
-    test_feach_spider_data()
+    test_redis()
