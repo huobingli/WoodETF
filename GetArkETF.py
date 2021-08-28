@@ -17,4 +17,9 @@ def GetArkETFFile(url, filename):
     with open(filename, 'wb') as f:
         f.write(ret.content)
 
+# 下载文件，更新数据库
+def DownFiles(filelist):
 
+    timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
+    for file in filelist:
+        file

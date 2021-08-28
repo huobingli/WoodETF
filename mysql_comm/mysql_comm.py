@@ -1,7 +1,7 @@
 import pymysql
 from timeit import default_timer
 
-from .setting import *
+from setting.setting import *
 
 def get_mysql_conn():
     conn = pymysql.connect(host=host, port=port, db=db, user=user, password=password)
