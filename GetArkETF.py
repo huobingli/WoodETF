@@ -1,7 +1,12 @@
 import requests
 import time
+import os
+
+import Middleware
 
 # basic_url = "https://ark-funds.com/wp-content/fundsiteliterature/holdings/ARK_INNOVATION_ETF_ARKK_HOLDINGS.pdf"
+
+download_dir = "/download/"
 
 def GetArkETFFile(url, filename):
     headers = { 
@@ -19,7 +24,11 @@ def GetArkETFFile(url, filename):
 
 # 下载文件，更新数据库
 def DownFiles(filelist):
+    current_dir = os.getcwd() + "/" + download_dir
+    print(current_dir)
+    if not os.path.exists(current_dir):
+        os.makedirs(current_dir)
 
-    timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
     for file in filelist:
-        file
+        # GetArkETFFile(file[1], current_dir + file[2])
+        Middleware.redis_set(file[0], current_dir + file[2])

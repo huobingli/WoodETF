@@ -1,4 +1,5 @@
 from mysql_comm.mysql_comm import *
+from redis_comm.redis_comm import *
 
 def insert_datas(datas):     
     with UsingMysql(log_time=True) as um:
@@ -10,8 +11,8 @@ def insert_datas(datas):
 
 def insert_data(database, data):
     with UsingMysql(log_time=True) as um:
-        sql = "insert into %s(ark_date, ark_id, ark_stock_name, ark_company, ark_shares, ark_market_value, ark_weight)  \
-        values(%s, %s, %s, %s, %s, %s, %s)" % database
+        sql = "insert into " + database + "(ark_date, ark_id, ark_stock_name, ark_company, ark_shares, ark_market_value, ark_weight)  \
+        values(%s, %s, %s, %s, %s, %s, %s)" 
         params = ('%s' % data[6], '%d' % data[0], "%s" % data[2], "%s" % data[1], "%s" % data[3], "%s" % data[4], "%f" % data[5])
         um.cursor.execute(sql, params)
 
@@ -45,6 +46,14 @@ def delete_data(database, condition=""):
     with UsingMysql(log_time=True) as um:
         sql = 'delete from %s %s' % (database, condition)
         um.cursor.execute(sql)
+
+def redis_set(key, value):
+    with UsingRedis(log_time=True) as ur:
+        ur.set_key_value(key, value) 
+
+def redis_get(key):
+    with UsingRedis(log_time=True) as ur:
+        return ur.get_key_value(key)
 
 if __name__ == '__main__':
     pass
