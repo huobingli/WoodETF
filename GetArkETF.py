@@ -24,11 +24,12 @@ def GetArkETFFile(url, filename):
 
 # 下载文件，更新数据库
 def DownFiles(filelist):
-    current_dir = os.getcwd() + "/" + download_dir
+    timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
+    current_dir = os.getcwd() + "/" + download_dir + "/" + timestamp + "/"
     print(current_dir)
     if not os.path.exists(current_dir):
         os.makedirs(current_dir)
 
     for file in filelist:
-        # GetArkETFFile(file[1], current_dir + file[2])
+        GetArkETFFile(file[1], current_dir + file[2])
         Middleware.redis_set(file[0], current_dir + file[2])

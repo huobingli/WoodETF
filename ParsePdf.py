@@ -34,10 +34,17 @@ def parse_pdf_Q(_pdf_name, database):
 def AnalyseFile(array):
     for data in array:
         file_path = redis_get(data[0])
-        # print(data[0])
-        # print(file_path)
-        if data[0] == "ARKQ":
-            parse_pdf_Q(file_path, data[0] + "_ETF")
+        
+        print("----------------- begin analyse -------------------")
+        print(data[0])
+        print(file_path)
+
+        # if data[0] == "ARKQ":
+        #     parse_pdf_Q(file_path, data[0] + "_ETF")
+        # else:
+        parse_pdf(file_path, data[0] + "_ETF")
+
+        print("----------------- end analyse -------------------")
 
 
 if __name__ == '__main__':
