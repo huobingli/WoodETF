@@ -49,4 +49,4 @@ if __name__ == '__main__':
     # DownFiles(ark_etf_conf)
 
     # 分析pdf数据
-    AnalyseFile(ark_etf_conf)
+    # AnalyseFile(ark_etf_conf)

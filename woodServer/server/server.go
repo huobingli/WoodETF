@@ -17,12 +17,19 @@ func main() {
 		v1.GET("/getstockdata/:stock", GetStockData)
 		v1.POST("/GetStockData", func(c *gin.Context) {
 
-			id := c.Query("id")
-			page := c.DefaultQuery("page", "0")
-			name := c.PostForm("name")
-			message := c.PostForm("message")
+			stock := c.Query("stock")
 
-			fmt.Printf("id: %s; page: %s; name: %s; message: %s", id, page, name, message)
+			// 获取StockData
+			// fmt.Printf("stock: %s;", stock)
+			c.String(http.StatusOK, "stock: %s;", stock)
+		})
+
+		v1.POST("/GetETFData", func(c *gin.Context) {
+
+			etf := c.Query("etf")
+
+			// fmt.Printf("etf: %s;", etf)
+			c.String(http.StatusOK, "etf: %s;", etf)
 		})
 
 		// 匹配的url格式:  /welcome?firstname=Jane&lastname=Doe
