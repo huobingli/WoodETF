@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # 载入配置到redis中
     # load_conf()
 
-    # 获取下载pdf数据
+    # 更新redis 获取下载pdf数据
     # feach_data_to_redis()
     test_feach_data_to_redis()
 
