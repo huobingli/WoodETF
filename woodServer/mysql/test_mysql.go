@@ -1,56 +1,50 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
-func checkError(e error) {
-	if e != nil {
-		panic(e)
+var Db *sqlx.DB
+
+func init() {
+
+	database, err := sqlx.Open("mysql", "root:@tcp(127.0.0.1:3306)/test")
+	if err != nil {
+		fmt.Println("open mysql failed,", err)
+		return
 	}
+
+	Db = database
+	// defer Db.Close() // 注意这行代码要写在上面err判断的下面 ??
+}
+
+type Person struct {
+	A int `db:"a"`
+	B int `db:"b"`
+	C int `db:"c"`
+	D int `db:"d"`
+	E int `db:"e"`
 }
 
 func main() {
-	// 打开MySQL连接
-	db, err := sql.Open("mysql", "golang:123456@tcp(127.0.0.1:3306)/golang?charset=utf8")
-	checkError(err)
-	fmt.Println("connected")
-	// ?为占位符，防止SQL注入
-	stmt, err := db.Prepare("insert into user(username, gender, email, ctime, utime) values(?, ?, ?, ?, ?)")
-	checkError(err)
-	timestamp := time.Now().Unix()
-	// 向占位符传参，Exec是一个不定参数函数，传入的参数与Prepare阶段设置的占位符相等
-	res, err := stmt.Exec("zhangsan", 1, "zhangsan@qq.com", timestamp, timestamp)
-	checkError(err)
-	// 获取生成的数据id
-	id, err := res.LastInsertId()
-	checkError(err)
-	fmt.Println(id)
+	var person []Person
 
-	stmt, err = db.Prepare("update user set email=? where id=?")
-	checkError(err)
-	res, err = stmt.Exec("zhangsan@163.com", id)
-	checkError(err)
-	aff, err := res.RowsAffected()
-	checkError(err)
-	fmt.Println("affected", aff)
-
-	rows, err := db.Query("select id, username, email from user")
-	for rows.Next() {
-		var id int
-		var username string
-		var email string
-		err = rows.Scan(&id, &username, &email)
-		checkError(err)
-		fmt.Println(id, username, email)
+	err := Db.Select(&person, "select a, b, c, d, e from test where id=?", 1)
+	if err != nil {
+		fmt.Println("exec failed, ", err)
+		return
 	}
 
-	stmt, _ = db.Prepare("delete from user where id>?")
-	res, _ = stmt.Exec(1)
-	aff, _ = res.RowsAffected()
-	fmt.Println("affected", aff)
+	fmt.Println("select succ:", person)
+
+	// stmt, err := db.Prepare("alter table dev convert to character set utf8 collate utf8_general_ci")  //要修改一下编码
+	// if stmt != nil {
+	//     stmt.Exec()
+	//     stmt.Close()
+	// }
+
+	// _ = err
 }
