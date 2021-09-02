@@ -22,7 +22,7 @@ def test_insert_data():
 def fecth_data(database, condition=""):
     with UsingMysql(log_time=True) as um:
         sql = 'select * from %s %s' % (database, condition)
-        # print(sql)
+        print(sql)
         um.cursor.execute(sql)
         data_list = um.cursor.fetchall()
         print('-- 总数: %d' % len(data_list))
