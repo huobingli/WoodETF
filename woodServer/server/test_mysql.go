@@ -20,7 +20,7 @@ type ARK_ETF struct {
 
 func get_data(cond string) []ARK_ETF {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM %s", cond)
-	fmt.Print(query)
+	// fmt.Print(query)
 	rows, err := Db.Query(query)
 	if err != nil {
 		fmt.Printf(`%T`, rows)
