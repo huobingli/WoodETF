@@ -1,4 +1,4 @@
-package mysql
+package server
 
 import (
 	"fmt"
@@ -19,7 +19,9 @@ type ARK_ETF struct {
 }
 
 func get_data(cond string) {
-	rows, err := Db.Query("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM ?", cond)
+	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM %s", cond)
+	print(query)
+	rows, err := Db.Query(query)
 	if err != nil {
 		fmt.Printf(`%T`, rows)
 		log.Fatal(err)
@@ -71,18 +73,4 @@ type Person struct {
 	C int `db:"c"`
 	D int `db:"d"`
 	E int `db:"e"`
-}
-
-func main() {
-	// var person []Person
-
-	// err := Db.Select(&person, "select a, b, c, d, e from test where id=?", 1)
-	// if err != nil {
-	// 	fmt.Println("exec failed, ", err)
-	// 	return
-	// }
-
-	// fmt.Println("select succ:", person)
-
-	get_data()
 }
