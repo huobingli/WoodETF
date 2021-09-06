@@ -1,7 +1,6 @@
-package server
+package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -35,13 +34,17 @@ func main() {
 
 		// 匹配的url格式:  /welcome?firstname=Jane&lastname=Doe
 		v1.GET("/welcome", func(c *gin.Context) {
-			firstname := c.DefaultQuery("firstname", "Guest")
-			lastname := c.Query("lastname") // 是 c.Request.URL.Query().Get("lastname") 的简写
+			// firstname := c.DefaultQuery("firstname", "Guest")
+			// lastname := c.Query("lastname") // 是 c.Request.URL.Query().Get("lastname") 的简写
 
 			// c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
 
-			msg, _ := json.Marshal(JsonResult{Code: 400, Msg: "验证失败"})
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			user := &JsonResult{Code: 0, Msg: "张三"}
+			// Gin 会自动将User转换成JSon返回给前端，其他像Map,slice也一样
+			c.JSON(http.StatusOK, user)
+
+			// msg, _ := json.Marshal(JsonResult{Code: 400, Msg: "验证失败"})
+			// c.JSON(http.StatusBadRequest, msg)
 		})
 	}
 
@@ -55,9 +58,9 @@ func GetStockData(c *gin.Context) {
 
 	query := fmt.Sprintf("%s where ark_stock_name='%s'", db, cond)
 	fmt.Print(query)
-	get_data(query)
+	result := get_data(query)
 
-	c.JSON(http.StatusOK, query)
+	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 
 // func test() {
