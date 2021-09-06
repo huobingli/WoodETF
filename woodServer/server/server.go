@@ -15,6 +15,7 @@ func main() {
 	v1 := router.Group("/v1")
 	{
 		v1.GET("/getstockdata/:db/:stock", GetStockData)
+		v1.GET("/GetETFData/:db/:time", GetETFData)
 		v1.POST("/GetStockData", func(c *gin.Context) {
 
 			stock := c.Query("stock")
@@ -24,6 +25,7 @@ func main() {
 			c.String(http.StatusOK, "stock: %s;", stock)
 		})
 
+		// v1.POST("/GetETFData/:db/:time", GetETFData)
 		v1.POST("/GetETFData", func(c *gin.Context) {
 
 			etf := c.Query("etf")
@@ -63,7 +65,19 @@ func GetStockData(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 
-// func test() {
-// 	query := "111"
-// 	get_data(query)
-// }
+func GetETFData(c *gin.Context) {
+	db := c.Param("db")
+	time := c.Param("time")
+
+	if len(time) == 8 {
+		time = time[4:6] + "/" + time[6:8] + "/" + time[0:4]
+
+		query := fmt.Sprintf("%s where ark_date='%s'", db, time)
+		// fmt.Print(query)
+		result := get_data(query)
+
+		c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status_code": -1, "data": "参数错误"})
+	}
+}

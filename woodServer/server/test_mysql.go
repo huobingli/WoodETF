@@ -11,7 +11,7 @@ import (
 var Db *sqlx.DB
 
 type ARK_ETF struct {
-	Ark_Date         string `json:"id" db:"ark_date"`
+	Ark_Date         string `json:"ark_date" db:"ark_date"`
 	Ark_Stock_Name   string `json:"ark_stock_name" db:"ark_stock_name"`
 	Ark_Shares       string `json:"ark_shares" db:"ark_shares"`
 	Ark_Market_Value string `json:"ark_market_value" db:"ark_market_value"`
@@ -20,7 +20,7 @@ type ARK_ETF struct {
 
 func get_data(cond string) []ARK_ETF {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM %s", cond)
-	// fmt.Print(query)
+	fmt.Print(query)
 	rows, err := Db.Query(query)
 	if err != nil {
 		fmt.Printf(`%T`, rows)
@@ -32,9 +32,7 @@ func get_data(cond string) []ARK_ETF {
 	// fmt.Print(rows)
 	for rows.Next() {
 		var ark_stock ARK_ETF
-		// data := ""
 		if err := rows.Scan(&ark_stock.Ark_Date, &ark_stock.Ark_Stock_Name, &ark_stock.Ark_Shares, &ark_stock.Ark_Market_Value, &ark_stock.Ark_Weight); err != nil {
-			// if err := rows.Scan(&data); err != nil {
 			log.Fatal(err)
 		}
 		// fmt.Print(reflect.Type(rows))
@@ -73,12 +71,4 @@ func init() {
 
 	Db = database
 	// defer Db.Close() // 注意这行代码要写在上面err判断的下面 ??
-}
-
-type Person struct {
-	A int `db:"a"`
-	B int `db:"b"`
-	C int `db:"c"`
-	D int `db:"d"`
-	E int `db:"e"`
 }
