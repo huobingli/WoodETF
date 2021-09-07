@@ -14,8 +14,12 @@ func main() {
 	// 分组
 	v1 := router.Group("/v1")
 	{
-		v1.GET("/getstockdata/:db/:stock", GetStockData)
+		v1.GET("/GetStockData/:db/:stock", GetStockData)
 		v1.GET("/GetETFData/:db/:time", GetETFData)
+		v1.GET("/GetETFStockChange/:db/:stock", GetETFStockChange) //	等同于第一个，用于获取某个代码所有数据
+
+		v1.GET("GetETFNewImportStock/:db/:time", GetETFNewImport)
+
 		v1.POST("/GetStockData", func(c *gin.Context) {
 
 			stock := c.Query("stock")
@@ -80,4 +84,19 @@ func GetETFData(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status_code": -1, "data": "参数错误"})
 	}
+}
+
+func GetETFStockChange(c *gin.Context) {
+	result := &JsonResult{Code: 0, Msg: "请使用GetStockData"}
+	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+}
+
+func GetETFNewImport(c *gin.Context) {
+	result := &JsonResult{Code: -1, Msg: "接口实现中..."}
+	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+}
+
+func GetETFNewExport(c *gin.Context) {
+	result := &JsonResult{Code: -1, Msg: "接口实现中..."}
+	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
