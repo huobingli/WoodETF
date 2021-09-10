@@ -87,7 +87,14 @@ func GetETFData(c *gin.Context) {
 }
 
 func GetETFStockChange(c *gin.Context) {
-	result := &JsonResult{Code: 0, Msg: "请使用GetStockData"}
+	db := c.Param("db")
+	stock := c.Param("stock")
+
+	query := fmt.Sprintf("%s where ark_stock_name='%s'", db, stock)
+	result := get_data_count(query)
+
+	// todo calc change
+
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 

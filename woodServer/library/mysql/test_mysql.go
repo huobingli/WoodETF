@@ -35,6 +35,23 @@ func get_data(cond string) {
 	}
 }
 
+func get_data_count(cond string) {
+	rows, err := Db.Query("SELECT ark_date,ark_shares FROM ?", cond)
+	if err != nil {
+		fmt.Printf(`%T`, rows)
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	// fmt.Print(rows)
+	for rows.Next() {
+		var ark_stock ARK_ETF
+		if err := rows.Scan(&ark_stock.Ark_Date, &ark_stock.Ark_Shares); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(ark_stock)
+	}
+}
+
 // tels
 func test_tsla_get_data() {
 	rows, err := Db.Query("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM ARKK_ETF WHERE ark_stock_name=?", "TSLA")
