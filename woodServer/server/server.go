@@ -94,6 +94,14 @@ func GetETFStockChange(c *gin.Context) {
 	result := get_data_count(query)
 
 	// todo calc change
+	for _, data := range result {
+		// for it, subdata := range data {
+		// 	fmt.Print(it)
+		// 	fmt.Print(subdata)
+		// }
+		fmt.Print(data.Ark_Date)
+		fmt.Print(data.Ark_Shares)
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
