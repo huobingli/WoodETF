@@ -53,6 +53,13 @@ func get_data(cond string) []ARK_ETF {
 	return ret
 }
 
+//func CalcStockChange(begin string, end string) string{
+//	nbegin, _ := strconv.ParseInt(begin, 10, 64)
+//	nend, _ := strconv.ParseInt(end, 10, 64)
+//	ret := strconv.FormatInt(nend - nbegin,10)
+//	return ret
+//}
+
 func get_data_count(cond string) []ARK_ETF_STOCK_SHARE {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value FROM %s", cond)
 	// fmt.Print(query)

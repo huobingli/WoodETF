@@ -41,6 +41,12 @@ if __name__ == '__main__':
     # 载入配置到redis中
     # load_conf()
 
+    # 检查当天是否为美股交易日
+    trade_date = "20210913"
+
+    # 更新数据库 ARK_ETF_RELA 
+    # update_ARK_ETF_RELA_data(trade_date)
+
     # 更新redis 获取下载pdf数据
     # feach_data_to_redis()
     test_feach_data_to_redis()

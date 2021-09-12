@@ -1,6 +1,8 @@
 from mysql_comm.mysql_comm import *
 from redis_comm.redis_comm import *
 
+from ArkETFConf import *
+
 def insert_datas(datas):     
     with UsingMysql(log_time=True) as um:
         for data in datas:
@@ -54,6 +56,20 @@ def redis_set(key, value):
 def redis_get(key):
     with UsingRedis(log_time=True) as ur:
         return ur.get_key_value(key)
+
+def update_ARK_ETF_RELA_data(tradedate):
+    datalist = fecth_data("ARK_ETF_RELA")
+
+    ark_etf_conf = []
+    for data in datalist:
+        filename = data["etf_download_name"]
+        filename = tradedate + filename[9:]
+
+        ak = ArkETFConf(data["etf_name"], "", filename)
+        ark_etf_conf.append(ak.toArray())
+
+    print(ark_etf_conf)
+    
 
 if __name__ == '__main__':
     pass
