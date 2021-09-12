@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -45,6 +46,7 @@ func get_data(cond string) []ARK_ETF {
 		// fmt.Print(reflect.Type(rows))
 		// fmt.Print(rows)
 		fmt.Print(rows)
+		ark_stock.Ark_Shares = strings.ReplaceAll(ark_stock.Ark_Shares, ",", "")
 		ret = append(ret, ark_stock)
 	}
 
@@ -68,6 +70,7 @@ func get_data_count(cond string) []ARK_ETF_STOCK_SHARE {
 			log.Fatal(err)
 		}
 
+		ark_stock.Ark_Shares = strings.ReplaceAll(ark_stock.Ark_Shares, ",", "")
 		ret = append(ret, ark_stock)
 	}
 

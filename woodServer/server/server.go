@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -86,6 +87,18 @@ func GetETFData(c *gin.Context) {
 	}
 }
 
+type ARK_ETF_STOCKCHANGE struct{
+	Ark_Date		string
+	Ark_Share	string
+}
+
+func CalcStockChange(begin string, end string) string{
+	nbegin, _ := strconv.ParseInt(begin, 10, 64)
+	nend, _ := strconv.ParseInt(end, 10, 64)
+	ret := strconv.FormatInt(nend - nbegin,10)
+	return ret
+}
+
 func GetETFStockChange(c *gin.Context) {
 	db := c.Param("db")
 	stock := c.Param("stock")
@@ -93,14 +106,24 @@ func GetETFStockChange(c *gin.Context) {
 	query := fmt.Sprintf("%s where ark_stock_name='%s'", db, stock)
 	result := get_data_count(query)
 
+	ret := make([]ARK_ETF_STOCKCHANGE, 0)
 	// todo calc change
-	for _, data := range result {
-		// for it, subdata := range data {
-		// 	fmt.Print(it)
-		// 	fmt.Print(subdata)
-		// }
-		fmt.Print(data.Ark_Date)
-		fmt.Print(data.Ark_Shares)
+	//var beginDate string
+	var beginShare string
+	for index, data := range result {
+		if (index == 0) {
+			//beginDate = data.Ark_Date
+			beginShare = data.Ark_Shares
+			continue
+		}
+		var ark_stock ARK_ETF_STOCKCHANGE
+
+		ark_stock.Ark_Date = data.Ark_Date
+		ark_stock.Ark_Share = CalcStockChange(data.Ark_Shares,beginShare)
+
+		beginShare = data.Ark_Shares
+
+		ret = append(ret, ark_stock)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
