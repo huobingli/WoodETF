@@ -141,7 +141,13 @@ func GetETFNewImport(c *gin.Context) {
 }
 
 func GetETFAllStockChange(c *gin.Context) {
+	// 获取db所有数据
+	db := c.Param("db")
 
+	get_data_count()
+
+	result := &JsonResult{Code: -1, Msg: "接口实现中..."}
+	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 
 func GetETFNewExport(c *gin.Context) {
