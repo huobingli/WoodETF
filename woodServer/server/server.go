@@ -140,12 +140,35 @@ func GetETFNewImport(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 
+type ARK_ETF_ALL_STOCKCHANGE struct {
+	Ark_Date  string
+	Ark_Stock string
+	Ark_Share string
+}
+
 func GetETFAllStockChange(c *gin.Context) {
 	// 获取db所有数据
 	db := c.Param("db")
 
 	query := fmt.Sprintf("%s", db)
 	result := get_data_count(query)
+
+	// todo 筛选出 code: {date,change}
+	// for index, data := range result {
+	// 	if index == 0 {
+	// 		//beginDate = data.Ark_Date
+	// 		beginShare = data.Ark_Shares
+	// 		continue
+	// 	}
+	// 	var ark_stock ARK_ETF_ALL_STOCKCHANGE
+
+	// 	ark_stock.Ark_Date = data.Ark_Date
+	// 	ark_stock.Ark_Share = CalcStockChange(beginShare, data.Ark_Shares)
+
+	// 	beginShare = data.Ark_Shares
+
+	// 	ret = append(ret, ark_stock)
+	// }
 
 	//result := &JsonResult{Code: -1, Msg: "接口实现中..."}
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
