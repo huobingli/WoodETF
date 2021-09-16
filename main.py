@@ -44,6 +44,10 @@ if __name__ == '__main__':
     # 检查当天是否为美股交易日
     trade_date = "20210913"
 
+    # TODO 获取当前时间，写入redis 更新mysql
+    timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
+    timestamp = timestamp + "_ark.pdf"
+
     # 更新数据库 ARK_ETF_RELA 
     # update_ARK_ETF_RELA_data(trade_date)
 
@@ -55,4 +59,4 @@ if __name__ == '__main__':
     DownFiles(ark_etf_conf)
 
     # 分析pdf数据
-    AnalyseFile(ark_etf_conf)
+    AnalyseParseFile(ark_etf_conf)
