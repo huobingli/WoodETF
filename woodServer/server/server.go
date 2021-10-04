@@ -119,6 +119,7 @@ func GetETFStockChange(c *gin.Context) {
 	for index, data := range result {
 		if index == 0 {
 			//beginDate = data.Ark_Date
+			
 			beginShare = data.Ark_Shares
 			continue
 		}

@@ -36,16 +36,29 @@ def parse_pdf(_pdf_name, database):
 # 当输出处理失败，往往是时间处理失败
 def parse_pdf_Q(_pdf_name, database):
 
-    print("----------------- parse_pdf_Q analyse -------------------")
-    tables = camelot.read_pdf(_pdf_name, flavor='stream')
-    array = tables[0].data
-    date = "09/16/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+    # print("----------------- parse_pdf_Q analyse -------------------")
+    # tables = camelot.read_pdf(_pdf_name, flavor='stream')
+    # array = tables[0].data
+    # date = "10/04/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
 
-    for item in array[1:]:
-        aa = ArkETFStock(item)
-        aa.setDateTime(date)
-        # print(aa.toArray())   
-        insert_data(database, aa.toArray())
+    # for item in array[1:]:
+    #     aa = ArkETFStock(item)
+    #     aa.setDateTime(date)
+    #     # print(aa.toArray())   
+    #     insert_data(database, aa.toArray())
+
+    print("----------------- parse_pdf_Q analyse -------------------")
+    tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
+
+    date = "10/04/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+
+    for table in tables:
+        array = table.data
+        for item in array[1:]:
+            if len(item) == 7 :
+                aa = ArkETFStock(item)
+                aa.setDateTime(date)
+                insert_data(database, aa.toArray())
 
 def pre_parse_pdf(_pdf_name):
     tables = camelot.read_pdf(_pdf_name, flavor='stream')
@@ -54,8 +67,23 @@ def pre_parse_pdf(_pdf_name):
     return datetime[0].find('/') == -1
     # date = "09/15/2021"
 
+def print_parse_pdf_Q(_pdf_name):
+    
+    print("----------------- parse_pdf_Q analyse -------------------")
+    tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
+
+    date = "10/04/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+
+    for table in tables:
+        array = table.data
+        for item in array[1:]:
+            if len(item) == 7 :
+                aa = ArkETFStock(item)
+                aa.setDateTime(date)
+                print(aa.toArray())
+
 def AnalyseParseFile(array):
-    PreAnalyseFile(array)
+    # PreAnalyseFile(array)
     AnalyseFile(array)
 
 # 判断是否可以正确处理pdf文件，需要特殊处理的表格，标志位s（special）,否则位n(normal)
@@ -83,16 +111,14 @@ def AnalyseFile(array):
         if redis_get(data[0] + "_parse") == 'S':
             parse_pdf_Q(file_path, data[0] + "_ETF")
         else:
+            print(data[0] + "_ETF")
+            # print("break!!!!!!!!!!")
             parse_pdf(file_path, data[0] + "_ETF")
-
-        # parse_pdf(file_path, data[0] + "_ETF")
 
         print("----------------- end analyse -------------------")
 
 if __name__ == '__main__':
-    file_name = "D:\\gitProject\\WoodETF\\download\\20210915\\20210915_arkx.pdf"
-    parse_pdf(file_name, "ARKX_ETF")
-
-
+    file_name = "D:\\gitProject\\WoodETF\\download\\20211004\\20211004_arkk.pdf"
+    print_parse_pdf_Q(file_name)
     # tables = camelot.read_pdf(file_name)
     # camelot.plot(tables[0], kind='grid').show()

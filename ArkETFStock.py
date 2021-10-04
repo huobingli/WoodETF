@@ -5,8 +5,8 @@ class ArkETFStock():
         self.company = str(args[0][1])
         self.stock = str(args[0][2])
         self.shares = str(args[0][4])
-        self.marketValue = str(args[0][5])
-        self.weight = float(args[0][6])
+        self.marketValue = str(args[0][5].replace('$', ''))
+        self.weight = float(args[0][6].replace('%', ""))
         self.datetime = ""
 
     def toString(self):
