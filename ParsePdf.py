@@ -50,12 +50,12 @@ def parse_pdf_Q(_pdf_name, database):
     print("----------------- parse_pdf_Q analyse -------------------")
     tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
 
-    date = "10/04/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+    date = "10/07/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
 
     for table in tables:
         array = table.data
         for item in array[1:]:
-            if len(item) == 7 :
+            if len(item) == 7 and len(item[0]) < 3 :  # disgusting
                 aa = ArkETFStock(item)
                 aa.setDateTime(date)
                 insert_data(database, aa.toArray())
@@ -71,13 +71,13 @@ def print_parse_pdf_Q(_pdf_name):
     
     print("----------------- parse_pdf_Q analyse -------------------")
     tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
-
+    print("current pdf is -------- " + _pdf_name)
     date = "10/04/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
 
     for table in tables:
         array = table.data
         for item in array[1:]:
-            if len(item) == 7 :
+            if len(item) == 7 and len(item[0]) < 3 :
                 aa = ArkETFStock(item)
                 aa.setDateTime(date)
                 print(aa.toArray())
@@ -110,15 +110,16 @@ def AnalyseFile(array):
         # if data[0] == "ARKQ" or data[0] == "ARKX":
         if redis_get(data[0] + "_parse") == 'S':
             parse_pdf_Q(file_path, data[0] + "_ETF")
+            # print_parse_pdf_Q(file_path)
         else:
             print(data[0] + "_ETF")
-            # print("break!!!!!!!!!!")
-            parse_pdf(file_path, data[0] + "_ETF")
+            print("break!!!!!!!!!!")
+            # parse_pdf(file_path, data[0] + "_ETF")
 
         print("----------------- end analyse -------------------")
 
 if __name__ == '__main__':
-    file_name = "D:\\gitProject\\WoodETF\\download\\20211004\\20211004_arkk.pdf"
+    file_name = "D:\\gitProject\\WoodETF\\download\\20211007\\20211007_arkq.pdf"
     print_parse_pdf_Q(file_name)
     # tables = camelot.read_pdf(file_name)
     # camelot.plot(tables[0], kind='grid').show()
