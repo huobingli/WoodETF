@@ -50,7 +50,7 @@ def parse_pdf_Q(_pdf_name, database):
     print("----------------- parse_pdf_Q analyse -------------------")
     tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
 
-    date = "10/07/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+    date = "10/08/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
 
     for table in tables:
         array = table.data
