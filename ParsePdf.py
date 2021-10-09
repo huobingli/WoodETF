@@ -2,6 +2,8 @@ import os
 import time
 
 import camelot
+import pandas
+import numpy
 
 from Middleware import *
 
@@ -118,8 +120,34 @@ def AnalyseFile(array):
 
         print("----------------- end analyse -------------------")
 
+def print_parse_csv(file_name, database):
+    csv_data = pandas.read_csv(file_name)  # 读取训练数据
+
+    # print(csv_data.loc[:,:])#取A,B,C,D列的所有行
+    
+    # 第一种
+    # array = csv_data.iloc[:,:]
+    # datas = array[:len(array) - 1]
+    # datas = numpy.array(datas)
+    # for data in datas:
+    #     print(data)
+
+    # 第二种
+    array = csv_data.values.tolist()
+    # print(array[:-1])
+
+    index = 1
+    for item in array[:-1]:
+        # if len(item) == 7 and len(item[0]) < 3 :
+        aa = ArkCSVETFStock(item)
+        aa.setId(index)
+        # print(aa.toArray())
+        index += 1
+        insert_data(database, aa.toArray())
+
+
 if __name__ == '__main__':
-    file_name = "D:\\gitProject\\WoodETF\\download\\20211007\\20211007_arkq.pdf"
-    print_parse_pdf_Q(file_name)
+    file_name = "D:\\gitProject\\WoodETF\\download\\20211009\\arkk.csv"
+    print_parse_csv(file_name, "ARKF_ETF_copy")
     # tables = camelot.read_pdf(file_name)
     # camelot.plot(tables[0], kind='grid').show()
