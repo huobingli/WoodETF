@@ -2,6 +2,7 @@ import tensorflow as tf
 
 csv_file = "D:\\gitProject\\WoodETF\\download\\20211009\\arkk.csv"
 
+# string_input_producer? error v2?
 file_queue = tf.train.string_input_producer([csv_file])  # 设置文件名队列，这样做能够批量读取文件夹中的文件
 
 reader = tf.TextLineReader(skip_header_lines=1)  # 使用tensorflow文本行阅读器，并且设置忽略第一行
