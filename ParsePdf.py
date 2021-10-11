@@ -52,7 +52,7 @@ def parse_pdf_Q(_pdf_name, database):
     print("----------------- parse_pdf_Q analyse -------------------")
     tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
 
-    date = "10/08/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
+    date = "10/11/2021" #time.strftime("%m/%d/%Y", time.localtime(time.time()))
 
     for table in tables:
         array = table.data
@@ -85,7 +85,7 @@ def print_parse_pdf_Q(_pdf_name):
                 print(aa.toArray())
 
 def AnalyseParseFile(array):
-    # PreAnalyseFile(array)
+    PreAnalyseFile(array)
     AnalyseFile(array)
 
 # 判断是否可以正确处理pdf文件，需要特殊处理的表格，标志位s（special）,否则位n(normal)
@@ -147,7 +147,8 @@ def print_parse_csv(file_name, database):
 
 
 if __name__ == '__main__':
-    file_name = "D:\\gitProject\\WoodETF\\download\\20211009\\arkk.csv"
-    print_parse_csv(file_name, "ARKF_ETF_copy")
+    file_name = "D:\\gitProject\\WoodETF\\download\\20211011\\arkf.pdf"
+    # print_parse_csv(file_name, "ARKF_ETF_copy")
+
     # tables = camelot.read_pdf(file_name)
     # camelot.plot(tables[0], kind='grid').show()

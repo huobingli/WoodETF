@@ -31,5 +31,5 @@ def DownFiles(filelist):
         os.makedirs(current_dir)
 
     for file in filelist:
-        GetArkETFFile(file[1], current_dir + file[2])
-        Middleware.redis_set(file[0], current_dir + file[2])
+        # GetArkETFFile(file[1], current_dir + file[2])
+        Middleware.redis_set(file[0], current_dir + file[0]+".pdf")

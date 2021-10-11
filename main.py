@@ -18,17 +18,27 @@ def feach_data_to_redis():
     datalist = fecth_data("ARK_ETF_RELA")
 
     # 下载名称和链接加入redis
+    # for data in datalist:
+    #     ak = ArkETFConf(data["etf_name"], data["etf_download_csv_url"], data["etf_download_csv_name"])
+    #     ark_etf_conf.append(ak.toArray())
+    #     redis_set(data["etf_name"] + "_download_csv_url", data["etf_download_csv_url"])
+    #     redis_set(data["etf_name"] + "_download_csv_name", data["etf_download_csv_name"])
+
     for data in datalist:
-        ak = ArkETFConf(data["etf_name"], data["etf_download_csv_url"], data["etf_download_csv_name"])
+        ak = ArkETFConf(data["etf_name"], data["etf_download_url"], data["etf_download_name"])
         ark_etf_conf.append(ak.toArray())
-        redis_set(data["etf_name"] + "_download_csv_url", data["etf_download_csv_url"])
-        redis_set(data["etf_name"] + "_download_csv_name", data["etf_download_csv_name"])
+        redis_set(data["etf_name"] + "_download_url", data["etf_download_url"])
+        redis_set(data["etf_name"] + "_download_name", data["etf_download_name"])
 
 def test_feach_data_to_redis():
     datalist = fecth_data("ARK_ETF_RELA")
 
+    # for data in datalist:
+    #     ak = ArkETFConf(data["etf_name"], data["etf_download_csv_url"], data["etf_download_csv_name"])
+    #     ark_etf_conf.append(ak.toArray())
+
     for data in datalist:
-        ak = ArkETFConf(data["etf_name"], data["etf_download_csv_url"], data["etf_download_csv_name"])
+        ak = ArkETFConf(data["etf_name"], data["etf_download_url"], data["etf_download_name"])
         ark_etf_conf.append(ak.toArray())
 
     print(ark_etf_conf)
@@ -52,11 +62,11 @@ if __name__ == '__main__':
     # update_ARK_ETF_RELA_data(trade_date)
 
     # 更新redis 获取下载pdf数据
-    # feach_data_to_redis()
-    test_feach_data_to_redis()
+    feach_data_to_redis()
+    # test_feach_data_to_redis()
 
     # 下载数据
-    DownFiles(ark_etf_conf)
+    # DownFiles(ark_etf_conf)
 
     # 分析pdf数据
-    # AnalyseParseFile(ark_etf_conf)
+    AnalyseParseFile(ark_etf_conf)
