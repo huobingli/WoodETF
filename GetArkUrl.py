@@ -31,26 +31,30 @@ def GetArkETFFile():
     ret = requests.post(url, headers=headers, data=data)
     print(ret.status_code)
     print(ret.content)
-    # print(ret.content.decode('ascii','ignore'))
-
-    # text = '€20'.encode('utf-8')
-    # print(text)
-    # print(text.decode('utf-8'))
-
-
-    # test = b'\x03C\x00\x00dqN\xe5\xab\x81G\xeez\xeez\xcci\x7f\xce\x81TB\xab,t\xf1E\xe0\xea\xba\x05@\x91\xbd\\\x8bQ7.-\x8a\xd0`\xed\x01Q\xc2\x12V^3\xe9\xdc\xd6\x00\xad\xf75a\xcf\x83,\xf0J\x98;\x96\xbdl a&%\xad\xed\xc8\xd1t\t\xbb\xdd\xe3\x98\x0c\xfb\xd2\x8c[\x0fDxJs\x19h\xed\x13\x8f\x1b.\x02\x11zBi\x15j.UH\x8f\xa6C\x7f\x03\x03'
-    # print(str(test, "utf-8"))
-    # test1 = test.encode("gb2312",'ignore')
-    # print(test1)
-    # test11 = test1.decode('utf-8','ignore').replace('\\x', '%')
-    # print(test11)
-    # test111 = parse.unquote(test11)
-    # print(test111)
-    # test2 = test.decode('utf-8','ignore')
-    # print(test2)
-    # # test2 = json.loads(test)
     
-    # print(len(test))
+    str1 = str(ret.content, "utf-8")
+    print(str1)
+    geturl = json.loads(str1)
+    geturl = geturl["file"]
+    print(geturl)
+
+    GetArkETF(geturl, "arkk.pdf")
+
+
+def GetArkETF(url, filename):
+    headers = { 
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 MicroMessenger/7.0.9.501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat',
+    }
+
+    # timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
+    # timestamp = timestamp + "_ark.pdf"
+
+    ret = requests.get(url, headers=headers)
+
+    with open(filename, 'wb') as f:
+        f.write(ret.content) 
 
 
 if __name__ == '__main__':
