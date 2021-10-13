@@ -49,6 +49,7 @@ def test_feach_data_to_redis():
 
     for data in datalist:
         ak = ArkETFConf(data["etf_name"], data["etf_download_url"], data["etf_download_name"])
+        ak.setPid(data["etf_download_pid"])
         ark_etf_conf.append(ak.toArray())
 
     print(ark_etf_conf)
@@ -84,7 +85,7 @@ if __name__ == '__main__':
     test_feach_data_to_redis()
 
     # 下载数据
-    DownFiles(ark_etf_conf)
+    # DownFiles(ark_etf_conf)
 
     # 分析pdf数据
     AnalyseParseFile(ark_etf_conf)

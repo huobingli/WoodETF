@@ -28,9 +28,15 @@ class ArkETFConf():
     def getDownname(self):
         return self.downname
 
+    def setPid(self, pid):
+        self.pid = pid
+
+    def getPid(self):
+        return self.pid
+
     def toString(self):
-        return self.name  + ",   " + self.downloadUrl + ",   " + self.downname
+        return self.name  + ",   " + self.downloadUrl + ",   " + self.downname + ",   "  + self.pid
 
     def toArray(self):
-        return (self.name, self.downloadUrl, self.downname)
+        return (self.name, self.downloadUrl, self.downname, self.pid)
 

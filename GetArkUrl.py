@@ -6,7 +6,7 @@ from urllib import parse
 # ark网站升级后，pdf文件需要从如下接口获取地址，包含unix时间戳和另外一个数(未知)
 url = "https://ark-funds.com/wp-admin/admin-ajax.php"
 
-def GetArkETFFile():
+def GetArkETFFileNew():
     headers = {
         'Host': 'ark-funds.com',
         'Connection': 'keep-alive',
@@ -47,9 +47,6 @@ def GetArkETF(url, filename):
         'Cache-Control': 'no-cache',
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 MicroMessenger/7.0.9.501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat',
     }
-
-    # timestamp = time.strftime("%Y%m%d", time.localtime(time.time()))
-    # timestamp = timestamp + "_ark.pdf"
 
     ret = requests.get(url, headers=headers)
 
