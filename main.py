@@ -85,7 +85,7 @@ if __name__ == '__main__':
     test_feach_data_to_redis()
 
     # 下载数据
-    DownFiles(ark_etf_conf)
+    # DownFiles(ark_etf_conf)
 
     # 分析pdf数据
     AnalyseParseFile(ark_etf_conf)
