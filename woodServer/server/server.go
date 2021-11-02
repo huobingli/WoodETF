@@ -23,6 +23,7 @@ func main() {
 
 		// 获取某etf新进成分股数据
 		v1.GET("GetETFNewImportStock/:db/:time", GetETFNewImport)
+		v1.GET("GetETFNewExportStock/", GetETFNewExport)
 
 		// 获取某etf 所有成分股变化
 		v1.GET("GetETFAllStockChange/:db/", GetETFAllStockChange)
@@ -119,7 +120,7 @@ func GetETFStockChange(c *gin.Context) {
 	for index, data := range result {
 		if index == 0 {
 			//beginDate = data.Ark_Date
-			
+
 			beginShare = data.Ark_Shares
 			continue
 		}
@@ -176,6 +177,15 @@ func GetETFAllStockChange(c *gin.Context) {
 }
 
 func GetETFNewExport(c *gin.Context) {
+	redisCLi, err := ProduceRedis(redis_host, redis_port, redis_passwd, 0, 100, true)
+	if err != nil {
+		fmt.Println("redis链接错误！err>>>", err.Error())
+		return
+	}
+
+	// 获取全部keys
+	allKeysLst := redisCLi.GetAllKeys()
+	fmt.Print("key>>> ", allKeysLst)
 	result := &JsonResult{Code: -1, Msg: "接口实现中..."}
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }

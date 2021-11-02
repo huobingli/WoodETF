@@ -66,18 +66,18 @@ func (r *RRedis) Get(key string, timeout int) (string, error) {
 	}
 }
 
-func (r *RRedis) GetNoWait(key string) (string, error) {
+// func (r *RRedis) GetNoWait(key string) (string, error) {
 
-	rc := r.getRedisConn()
-	defer rc.Close()
+// 	rc := r.getRedisConn()
+// 	defer rc.Close()
 
-	res, err := redis.String(rc.Do("LPOP", key))
+// 	res, err := redis.String(rc.Do("LPOP", key))
 
-	if err != nil {
-		return "", err
-	}
-	return res, nil
-}
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return res, nil
+// }
 
 func (r *RRedis) Put(key string, value string, timeout int) (int, error) {
 
@@ -173,4 +173,67 @@ func (r *RRedis) GetNoWait(key string) (string, error) {
 		return "", err
 	}
 	return res, nil
+}
+
+// 父级interface
+type RedisFatherInterface interface {
+	// 获取全部keys
+	GetAllKeys() []string
+}
+
+// ListInterface 操做list接口
+type ListInterface interface {
+	// "继承"父类的全部方法
+	RedisFatherInterface
+	GetNoWait(key string) (string, error) // ~di: interface{}类型、数据压缩
+	Get(key string, timeout int) (string, error)
+	Put(key string, value string, timeout int) (int, error)
+	PutNoWait(key string, value string) (int, error)
+	QSize(key string) int
+	Empty(key string) bool
+	Full(key string) bool
+}
+
+// redis全部操做的接口
+type RedisInterface interface {
+	ListInterface
+}
+
+// 工厂函数，要求对应的结构体必须实现 RedisInterface 中的全部方法
+// 若是只想实现某一些方法，就返回"有这些方法的结构体"就行了
+func ProduceRedis(host, port, password string, db, maxSize int, lazyLimit bool) (RedisInterface, error) {
+
+	// 要求RRedis结构体实现返回的接口中全部的方法！
+	redisObj := &RRedis{
+		maxIdle:        100,
+		maxActive:      130,
+		maxIdleTimeout: time.Duration(60) * time.Second,
+		maxTimeout:     time.Duration(30) * time.Second,
+		lazyLimit:      lazyLimit,
+		maxSize:        maxSize,
+	}
+	// 创建链接池
+	redisObj.redisCli = &redis.Pool{
+		MaxIdle:     redisObj.maxIdle,
+		MaxActive:   redisObj.maxActive,
+		IdleTimeout: redisObj.maxIdleTimeout,
+		Wait:        true,
+		Dial: func() (redis.Conn, error) {
+			con, err := redis.Dial(
+				"tcp",
+				host+":"+port, // address
+				redis.DialPassword(password),
+				redis.DialDatabase(int(db)),
+				redis.DialConnectTimeout(redisObj.maxTimeout),
+				redis.DialReadTimeout(redisObj.maxTimeout),
+				redis.DialWriteTimeout(redisObj.maxTimeout),
+			)
+			if err != nil {
+				return nil, err
+			}
+			return con, nil
+		},
+	}
+
+	return redisObj, nil
 }
