@@ -139,4 +139,4 @@ dmypy.json
 setting.py
 *.yaml
 
-conf.go
+config.go
