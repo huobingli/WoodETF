@@ -10,17 +10,31 @@ import (
 
 var conf_file_path string = "D:\\gitProject\\WoodETF\\woodServer\\config\\setting.yaml"
 
-type redis_conf struct {
+type redis_conf1 struct {
 	redis struct {
-		host     string `yaml:"host"`
-		port     int    `yaml:"port"`
-		user     string `yaml:"user"`
-		password string `yaml:"password"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
 	}
+}
+
+type Record struct {
+	// redis struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	// }
+}
+
+type redis_conf struct {
+	Record Record `yaml:"redis"`
 }
 
 func load_config() {
 
+	//conf := new(map[interface{}]interface{})
 	conf := new(redis_conf)
 
 	yamlFile, err := ioutil.ReadFile(conf_file_path)
@@ -29,7 +43,7 @@ func load_config() {
 	}
 	// fmt.Println(yamlFile)
 
-	err = yaml.Unmarshal(yamlFile, &conf)
+	err = yaml.Unmarshal(yamlFile, conf)
 	// err = yaml.Unmarshal(yamlFile, &resultMap)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
