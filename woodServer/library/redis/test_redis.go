@@ -2,6 +2,7 @@ package redis
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"time"
 
@@ -160,4 +161,15 @@ func (r *RRedis) Full(key string) bool {
 	}
 
 	return false
+}
+
+func (r *RRedis) ZSetAdd(set string, key string, value float64) {
+
+	rc := r.getRedisConn()
+	defer rc.Close()
+
+	_, err := rc.Do("ZADD", set, value, key)
+	if err != nil {
+		fmt.Println("redis set failed:", err)
+	}
 }

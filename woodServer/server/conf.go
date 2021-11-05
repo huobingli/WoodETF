@@ -51,6 +51,6 @@ func load_config() {
 	log.Println("conf", conf)
 }
 
-func main() {
+func test() {
 	load_config()
 }

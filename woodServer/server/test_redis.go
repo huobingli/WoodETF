@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"time"
 
@@ -179,6 +180,7 @@ func (r *RRedis) GetNoWait(key string) (string, error) {
 type RedisFatherInterface interface {
 	// 获取全部keys
 	GetAllKeys() []string
+	ZSetAdd(set string, key string, value float64)
 }
 
 // ListInterface 操做list接口
@@ -236,4 +238,15 @@ func ProduceRedis(host, port, password string, db, maxSize int, lazyLimit bool) 
 	}
 
 	return redisObj, nil
+}
+
+func (r *RRedis) ZSetAdd(set string, key string, value float64) {
+
+	rc := r.getRedisConn()
+	defer rc.Close()
+
+	_, err := rc.Do("ZADD", set, value, key)
+	if err != nil {
+		fmt.Println("redis set failed:", err)
+	}
 }

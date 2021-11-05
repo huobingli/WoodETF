@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,7 @@ func main() {
 
 		// 获取某etf新进成分股数据
 		v1.GET("GetETFNewImportStock/:db/:time", GetETFNewImport)
-		v1.GET("GetETFNewExportStock/", GetETFNewExport)
+		v1.GET("GetETFNewExportStock/:db/:time", GetETFNewExport)
 
 		// 获取某etf 所有成分股变化
 		v1.GET("GetETFAllStockChange/:db/", GetETFAllStockChange)
@@ -183,9 +184,35 @@ func GetETFNewExport(c *gin.Context) {
 		return
 	}
 
+	db := c.Param("db")
+	time := c.Param("time")
+
+	time = strings.Replace(time, "-", "/", -1)
+
+	query := fmt.Sprintf("%s where ark_date='%s'", db, time)
+	result := get_data_count(query)
+
+	// 导入数据库数据到redis，放入zset集合，调用更新
+
+	for _, data := range result {
+		//fmt.Printf("%v, %v", index, data)
+
+		val, _ := strconv.ParseFloat(strings.ReplaceAll(data.Ark_Shares, ",", ""), 32)
+		// fmt.Println("val: ", data.Ark_Shares)
+		redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
+		// if err != nil {
+		// 	// redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
+		// 	fmt.Println("success ZSetAdd", err)
+		// } else {
+		// 	fmt.Println("error ZSetAdd")
+		// }
+
+		//ret = append(ret, ark_stock)
+	}
+
 	// 获取全部keys
 	allKeysLst := redisCLi.GetAllKeys()
 	fmt.Print("key>>> ", allKeysLst)
-	result := &JsonResult{Code: -1, Msg: "接口实现中..."}
+	// result := &JsonResult{Code: -1, Msg: "接口实现中..."}
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
