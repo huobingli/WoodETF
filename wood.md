@@ -10,3 +10,11 @@ cmd  不行 go build /{目录}
 # 2021.11.6 
 增加每次修改的新增、删除、股数变动的情况
 python 存入新redis中，用zset，set为arkk ，key为stock，value为marketshares
+
+# BACK
+```
+docker run -d --name docker-redis-2 -p 32336:6379 redis --requirepass "111111" --appendonly yes
+docker run --name docker-mysql -p 32333:3306 -e MYSQL_ROOT_PASSWORD=111111 -d mysql
+export PATH=/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
+```
+
