@@ -195,19 +195,10 @@ func GetETFNewExport(c *gin.Context) {
 	// 导入数据库数据到redis，放入zset集合，调用更新
 
 	for _, data := range result {
-		//fmt.Printf("%v, %v", index, data)
-
 		val, _ := strconv.ParseFloat(strings.ReplaceAll(data.Ark_Shares, ",", ""), 32)
-		// fmt.Println("val: ", data.Ark_Shares)
-		redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
-		// if err != nil {
-		// 	// redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
-		// 	fmt.Println("success ZSetAdd", err)
-		// } else {
-		// 	fmt.Println("error ZSetAdd")
-		// }
 
-		//ret = append(ret, ark_stock)
+		// 增加到redis zset中
+		redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
 	}
 
 	// 获取全部keys

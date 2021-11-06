@@ -75,9 +75,18 @@ class UsingRedis(object):
 
     def get_key_value(self,key):
         '''
-        往redis中设值
+        往redis中获取值
         :param key:
-        :param value:
-        :return:
+        :return value
         '''
         return self._conn.get(key)
+
+    def zset_set_key_value(self, set, key, value):
+        mapping={key:value}
+        self._conn.zadd(set, mapping)
+
+    def zset_get_key_value(self, set, key):
+        return self._conn.zscore(set, key)
+
+    def zset_is_in_set(self, set, key):
+        return self._conn.zrank(set, key) >= 0

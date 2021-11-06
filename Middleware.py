@@ -57,6 +57,14 @@ def redis_get(key):
     with UsingRedis(log_time=True) as ur:
         return ur.get_key_value(key)
 
+def redis_zset_set(key, value):
+    with UsingRedis(log_time=True) as ur:
+        ur.zset_set_key_value(key, value) 
+
+def redis_zset_get(key):
+    with UsingRedis(log_time=True) as ur:
+        return ur.zset_get_key_value(key)
+
 def update_ARK_ETF_RELA_data(tradedate):
     datalist = fecth_data("ARK_ETF_RELA")
 

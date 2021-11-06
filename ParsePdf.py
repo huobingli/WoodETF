@@ -61,7 +61,10 @@ def parse_pdf_Q(_pdf_name, database):
             if len(item) == 7 and len(item[0]) < 3 :  # disgusting
                 aa = ArkETFStock(item)
                 aa.setDateTime(date)
+                # 增加数据到mysql
                 insert_data(database, aa.toArray())
+                # 增加数据到redis todo 
+                # insert_data_to_redis(database, item.stock, item.shares)
 
 def pre_parse_pdf(_pdf_name):
     tables = camelot.read_pdf(_pdf_name, flavor='stream')
