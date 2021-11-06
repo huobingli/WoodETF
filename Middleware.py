@@ -57,9 +57,9 @@ def redis_get(key):
     with UsingRedis(log_time=True) as ur:
         return ur.get_key_value(key)
 
-def redis_zset_set(key, value):
+def redis_zset_set(set, key, value):
     with UsingRedis(log_time=True) as ur:
-        ur.zset_set_key_value(key, value) 
+        ur.zset_set_key_value(set, key, value) 
 
 def redis_zset_get(key):
     with UsingRedis(log_time=True) as ur:

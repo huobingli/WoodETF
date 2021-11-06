@@ -64,7 +64,7 @@ def parse_pdf_Q(_pdf_name, database):
                 # 增加数据到mysql
                 insert_data(database, aa.toArray())
                 # 增加数据到redis todo 
-                # insert_data_to_redis(database, item.stock, item.shares)
+                # redis_zset_set(database, aa.stock, int(aa.shares.replace(",", "")))
 
 def pre_parse_pdf(_pdf_name):
     tables = camelot.read_pdf(_pdf_name, flavor='stream')
@@ -152,6 +152,7 @@ def print_parse_csv(file_name, database):
 
 if __name__ == '__main__':
     file_name = "D:\\gitProject\\WoodETF\\download\\20211011\\arkf.pdf"
+    parse_pdf_Q(file_name, "ARKF_ETF");
     # print_parse_csv(file_name, "ARKF_ETF_copy")
 
     # tables = camelot.read_pdf(file_name)

@@ -89,4 +89,9 @@ class UsingRedis(object):
         return self._conn.zscore(set, key)
 
     def zset_is_in_set(self, set, key):
-        return self._conn.zrank(set, key) >= 0
+        ret = self._conn.zrank(set, "key")
+
+        if ret != None:
+            return ret >= 0
+        else:
+            return False
