@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -177,6 +179,10 @@ func GetETFAllStockChange(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 }
 
+//func todata(interface{} data) string {
+//
+//}
+
 func GetETFNewExport(c *gin.Context) {
 	redisCLi, err := ProduceRedis(redis_host, redis_port, redis_passwd, 0, 100, true)
 	if err != nil {
@@ -190,15 +196,20 @@ func GetETFNewExport(c *gin.Context) {
 	time = strings.Replace(time, "-", "/", -1)
 
 	query := fmt.Sprintf("%s where ark_date='%s'", db, time)
-	result := get_data_count(query)
+	result := get_data_with_time(query)
 
+	print(reflect.TypeOf(result))
 	// 导入数据库数据到redis，放入zset集合，调用更新
 
+	list_name := strings.Join([]string{db, strings.ReplaceAll(time, "/", "")},"")
 	for _, data := range result {
-		val, _ := strconv.ParseFloat(strings.ReplaceAll(data.Ark_Shares, ",", ""), 32)
-
-		// 增加到redis zset中
-		redisCLi.ZSetAdd(db, data.Ark_Stock_Name, val)
+		//val, _ := strconv.ParseFloat(strings.ReplaceAll(data.Ark_Shares, ",", ""), 32)
+		//fmt.Println(reflect.TypeOf(data))
+		//增加到redis zset中
+		//val:= todata(data)
+		//string(data)
+		value, _ := json.Marshal(data)
+		redisCLi.ListAdd(list_name, string(value))
 	}
 
 	// 获取全部keys

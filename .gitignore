@@ -140,3 +140,5 @@ setting.py
 *.yaml
 
 config.go
+
+*.sql

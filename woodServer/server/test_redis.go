@@ -181,6 +181,8 @@ type RedisFatherInterface interface {
 	// 获取全部keys
 	GetAllKeys() []string
 	ZSetAdd(set string, key string, value float64)
+	ListAdd(list string, key string)
+	//HashAdd(hash string, key string, value float64)
 }
 
 // ListInterface 操做list接口
@@ -248,5 +250,16 @@ func (r *RRedis) ZSetAdd(set string, key string, value float64) {
 	_, err := rc.Do("ZADD", set, value, key)
 	if err != nil {
 		fmt.Println("redis set failed:", err)
+	}
+}
+
+
+func (r *RRedis) ListAdd(list string, key string) {
+	rc := r.getRedisConn()
+	defer rc.Close()
+
+	_, err := rc.Do("LPUSH", list, key)
+	if err != nil {
+		fmt.Println("redis list failed:", err)
 	}
 }

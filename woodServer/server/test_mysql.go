@@ -26,6 +26,12 @@ type ARK_ETF_STOCK_SHARE struct {
 	Ark_Market_Value string `json:"ark_market_value" db:"ark_market_value"`
 }
 
+type ARK_ETF_STOCK_TIME struct {
+	Ark_Stock_Name   string `json:"ark_stock_name" db:"ark_stock_name"`
+	Ark_Shares       string `json:"ark_shares" db:"ark_shares"`
+	Ark_Market_Value string `json:"ark_market_value" db:"ark_market_value"`
+}
+
 func get_data(cond string) []ARK_ETF {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM %s", cond)
 	// fmt.Print(query)
@@ -112,4 +118,28 @@ func init() {
 
 	Db = database
 	// defer Db.Close() // 注意这行代码要写在上面err判断的下面 ??
+}
+
+func get_data_with_time(cond string) []ARK_ETF_STOCK_TIME {
+	query := fmt.Sprintf("SELECT ark_stock_name,ark_shares,ark_market_value FROM %s", cond)
+	// fmt.Print(query)
+	rows, err := Db.Query(query)
+	if err != nil {
+		fmt.Printf(`%T`, rows)
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	ret := make([]ARK_ETF_STOCK_TIME, 0)
+	for rows.Next() {
+		var ark_stock ARK_ETF_STOCK_TIME
+		if err := rows.Scan(&ark_stock.Ark_Stock_Name, &ark_stock.Ark_Shares, &ark_stock.Ark_Market_Value); err != nil {
+			log.Fatal(err)
+		}
+
+		ark_stock.Ark_Shares = strings.ReplaceAll(ark_stock.Ark_Shares, ",", "")
+		ret = append(ret, ark_stock)
+	}
+
+	return ret
 }
