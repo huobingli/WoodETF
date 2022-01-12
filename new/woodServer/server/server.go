@@ -3,11 +3,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"strings"
+	"woodServer/server/myredis"
 
-	"github.com/gin-gonic/gin"
+	"woodServer/server/config"
 )
 
 //启动
@@ -66,10 +70,10 @@ func main() {
 
 	home := router.Group("/home")
 	{
-		home.GET("/index", Home)
+		home.GET("/index/:db/:time", Index)
 	}
 
-	router.Run(":7002")
+	router.Run(":7001")
 }
 
 func Home(c *gin.Context) {
@@ -192,37 +196,65 @@ func GetETFAllStockChange(c *gin.Context) {
 //}
 
 func GetETFNewExport(c *gin.Context) {
-	redisCLi, err := ProduceRedis(redis_host, redis_port, redis_passwd, 0, 100, true)
+	redisCLi, err := myredis.ProduceRedis(config.Redis_host, config.Redis_port, config.Redis_passwd, 0, 100, true)
 	if err != nil {
 		fmt.Println("redis链接错误！err>>>", err.Error())
 		return
 	}
 
-	// db := c.Param("db")
-	// time := c.Param("time")
+	db := c.Param("db")
+	time := strings.Replace(c.Param("time"), "-", "/", -1)
+	list_name := strings.Join([]string{db, strings.ReplaceAll(time, "/", "")}, "")
 
-	// time = strings.Replace(time, "-", "/", -1)
+	if redisCLi.HashExist(db, list_name) {
+		result, err := redisCLi.HashGet(db, list_name)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{"status_code": -1, "data": err})
+			//	上报错误
+		} else {
+			//value, _ := json.Marshal(result)
+			//fmt.Println(result)
+			c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+		}
 
-	// query := fmt.Sprintf("%s where ark_date='%s'", db, time)
-	// result := get_data_with_time(query)
+	} else {
+		query := fmt.Sprintf("%s where ark_date='%s'", db, time)
+		result := get_data_with_time(query)
+		c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
 
-	// // print(reflect.TypeOf(result))
-	// // // 导入数据库数据到redis，放入zset集合，调用更新
+		value, _ := json.Marshal(result)
+		redisCLi.HashAdd(db, list_name, string(value))
 
-	// list_name := strings.Join([]string{db, strings.ReplaceAll(time, "/", "")}, "")
-	// for _, data := range result {
-	// 	//val, _ := strconv.ParseFloat(strings.ReplaceAll(data.Ark_Shares, ",", ""), 32)
-	// 	//fmt.Println(reflect.TypeOf(data))
-	// 	//增加到redis zset中
-	// 	//val:= todata(data)
-	// 	//string(data)
-	// 	value, _ := json.Marshal(data)
-	// 	redisCLi.ListAdd(list_name, string(value))
-	// }
+		allKeysLst := redisCLi.GetAllKeys()
+		fmt.Print("key>>> ", allKeysLst)
+	}
+}
 
-	// 获取全部keys
-	allKeysLst := redisCLi.GetAllKeys()
-	fmt.Print("key>>> ", allKeysLst)
-	// result := &JsonResult{Code: -1, Msg: "接口实现中..."}
-	c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": "pong"})
+func Index(c *gin.Context) {
+	redisCLi, err := myredis.ProduceRedis(config.Redis_host, config.Redis_port, config.Redis_passwd, 0, 100, true)
+	if err != nil {
+		fmt.Println("redis链接错误！err>>>", err.Error())
+		return
+	}
+
+	db := c.Param("db")
+	time := strings.Replace(c.Param("time"), "-", "/", -1)
+	list_name := strings.Join([]string{db, strings.ReplaceAll(time, "/", "")}, "")
+
+	result, err := redisCLi.StringGet(list_name)
+	if err != nil {
+		if redisCLi.IsNill(err) {
+			query := fmt.Sprintf("%s where ark_date='%s'", db, time)
+			result := get_data_with_time(query)
+			c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+
+			value, _ := json.Marshal(result)
+			redisCLi.StringSet(list_name, string(value))
+			//c.JSON(http.StatusOK, gin.H{"status_code": -1, "data": "nil data"})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"status_code": -1, "data": err})
+		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status_code": 0, "data": result})
+	}
 }
