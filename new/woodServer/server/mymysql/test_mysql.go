@@ -1,4 +1,4 @@
-package main
+package mymysql
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ type ARK_ETF_STOCK_TIME struct {
 	Ark_Market_Value string `json:"ark_market_value" db:"ark_market_value"`
 }
 
-func get_data(cond string) []ARK_ETF {
+func Get_data(cond string) []ARK_ETF {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM %s", cond)
 	// fmt.Print(query)
 	rows, err := Db.Query(query)
@@ -66,9 +66,12 @@ func get_data(cond string) []ARK_ETF {
 //	return ret
 //}
 
-func get_data_count(cond string) []ARK_ETF_STOCK_SHARE {
+func Get_data_count(cond string) []ARK_ETF_STOCK_SHARE {
 	query := fmt.Sprintf("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value FROM %s", cond)
 	// fmt.Print(query)
+	if Db == nil {
+		return nil
+	}
 	rows, err := Db.Query(query)
 	if err != nil {
 		fmt.Printf(`%T`, rows)
@@ -91,7 +94,7 @@ func get_data_count(cond string) []ARK_ETF_STOCK_SHARE {
 }
 
 // tels
-func test_tsla_get_data() {
+func Test_tsla_get_data() {
 	rows, err := Db.Query("SELECT ark_date,ark_stock_name,ark_shares,ark_market_value,ark_weight FROM ARKK_ETF WHERE ark_stock_name=?", "TSLA")
 	if err != nil {
 		fmt.Printf(`%T`, rows)
@@ -120,7 +123,7 @@ func init() {
 	// defer Db.Close() // 注意这行代码要写在上面err判断的下面 ??
 }
 
-func get_data_with_time(cond string) []ARK_ETF_STOCK_TIME {
+func Get_data_with_time(cond string) []ARK_ETF_STOCK_TIME {
 	query := fmt.Sprintf("SELECT ark_stock_name,ark_shares,ark_market_value FROM %s", cond)
 	// fmt.Print(query)
 	rows, err := Db.Query(query)
