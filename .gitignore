@@ -142,3 +142,5 @@ setting.py
 config.go
 
 *.sql
+*.db
+*.ico
