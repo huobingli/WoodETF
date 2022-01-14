@@ -50,16 +50,16 @@ func router_test() http.Handler {
 //启动
 func main() {
 	//router := gin.New()
-	router := gin.Default()
-
-	// 设置静态资源
-	router.Static("/assets", "./assets")
-	router.StaticFS("/more_static", http.Dir("my_file_system"))
-	router.StaticFile("/favicon.ico", "./resources/favicon.ico")
+	//router := gin.Default()
+	//
+	//// 设置静态资源
+	//router.Static("/assets", "./assets")
+	//router.StaticFS("/more_static", http.Dir("my_file_system"))
+	//router.StaticFile("/favicon.ico", "./resources/favicon.ico")
 
 	// 分组
 	server := &http.Server{
-		Addr:         ":8001",
+		Addr:         ":9001",
 		Handler:      hxapp.Hx_app_router(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -73,5 +73,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	router.Run(":7001")
+	//router.Run(":9001")
 }

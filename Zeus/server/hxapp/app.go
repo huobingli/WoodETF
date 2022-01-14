@@ -1,10 +1,12 @@
 package hxapp
 
 import (
+	"ZEUS/server/hxapp/container"
 	"ZEUS/server/hxapp/curve"
 	"ZEUS/server/hxapp/more"
 	"ZEUS/server/hxapp/page"
 	"ZEUS/server/hxapp/table"
+	"ZEUS/server/middleware"
 	"fmt"
 	"net/http"
 
@@ -17,6 +19,7 @@ func Hx_app_router() http.Handler {
 	router.StaticFS("/more_static", http.Dir("my_file_system"))
 	router.StaticFile("/favicon.ico", "./resources/favicon.ico")
 
+	router.Use(middleware.CorsMiddle())
 	v1help := router.Group("/v1/Help")
 	{
 		v1help.GET("/", HelpInfo)
@@ -28,6 +31,11 @@ func Hx_app_router() http.Handler {
 		v1page.GET("/GetAllPage", page.GetAllPage)
 		v1page.GET("/GetAllPageContainer/:pageid", page.GetAllPageContainer)
 		v1page.GET("/GetPageHaveContainer/:contid", page.GetPageHaveContainer)
+	}
+
+	v1container := router.Group("/v1/Container")
+	{
+		v1container.GET("/GetAllContainer", container.GetAllContainer)
 	}
 
 	v1curve := router.Group("/v1/Curve")
