@@ -52,8 +52,8 @@ def parse_pdf_Q(_pdf_name, database):
     print("----------------- parse_pdf_Q analyse -------------------")
     tables = camelot.read_pdf(_pdf_name, pages='all', flavor='stream')
 
-    date = "03/08/2022" 
-    # date = time.strftime("%m/%d/%Y", time.localtime(time.time()))
+    # date = "03/08/2022" 
+    date = time.strftime("%m/%d/%Y", time.localtime(time.time()))
     
 
     for table in tables:
@@ -152,8 +152,8 @@ def print_parse_csv(file_name, database):
 
 
 if __name__ == '__main__':
-    file_name = "D:\\gitProject\\WoodETF\\download\\20220131\\arkf.pdf"
-    parse_pdf_Q(file_name, "ARKF_ETF");
+    file_name = "D:\\gitProject\\WoodETF\\download\\20220308\\arkx.pdf"
+    parse_pdf_Q(file_name, "ARKX_ETF");
     # print_parse_csv(file_name, "ARKF_ETF_copy")
 
     # tables = camelot.read_pdf(file_name)

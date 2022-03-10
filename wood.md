@@ -18,3 +18,5 @@ docker run --name docker-mysql -p 32333:3306 -e MYSQL_ROOT_PASSWORD=111111 -d my
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
 ```
 
+## 部分数据缺少
+20220309之后数据需要重新生成
